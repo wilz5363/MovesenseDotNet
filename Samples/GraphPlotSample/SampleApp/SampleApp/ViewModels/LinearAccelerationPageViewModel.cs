@@ -14,6 +14,7 @@ namespace SampleApp.ViewModels
     {
         private IMdsSubscription subscription;
 
+
         public ICommand ToggleSubscribeSwitchCommand { get; set; }
 
         // Property to reflect the current state of the ToggleSwitch in the UI
@@ -34,8 +35,7 @@ namespace SampleApp.ViewModels
                         ConnectionStatusText = "Connecting...";
                         await MovesenseDeviceVM.Connect();
                         ConnectionStatusText = "Subscribing...";
-
-                        subscription = await MovesenseDeviceVM.MovesenseDevice.SubscribeAccelerometerAsync(
+						subscription = await MovesenseDeviceVM.MovesenseDevice.SubscribeAccelerometerAsync(
                             (d) =>
                             {
                                 PlotData(d.Data.Timestamp, d.Data.AccData[0].X, d.Data.AccData[0].Y, d.Data.AccData[0].Z);
@@ -52,7 +52,8 @@ namespace SampleApp.ViewModels
                         await MovesenseDeviceVM.Disconnect();
                         ConnectionStatusText = "Disconnected";
                     }
-                }
+					
+				}
                 , () => (MovesenseDeviceVM != null) // Enable command only if we've got a device
             );
 
@@ -118,9 +119,9 @@ namespace SampleApp.ViewModels
                 TextColor = OxyColors.Transparent
             });
 
-            xlineSeries = new LineSeries { Title = "X", MarkerType = MarkerType.None, Color = OxyColors.Red };
-            ylineSeries = new LineSeries { Title = "Y", MarkerType = MarkerType.None, Color = OxyColors.Green };
-            zlineSeries = new LineSeries { Title = "Z", MarkerType = MarkerType.None, Color = OxyColors.CadetBlue };
+            xlineSeries = new LineSeries { Title = "L/R", MarkerType = MarkerType.None, Color = OxyColors.BlueViolet };
+            ylineSeries = new LineSeries { Title = "Up/Down", MarkerType = MarkerType.None, Color = OxyColors.Green };
+            zlineSeries = new LineSeries { Title = "F/B", MarkerType = MarkerType.None, Color = OxyColors.Cyan };
             model.Series.Add(xlineSeries);
             model.Series.Add(ylineSeries);
             model.Series.Add(zlineSeries);

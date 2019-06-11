@@ -18,7 +18,11 @@
                        VerticalOptions="Start" 
                        FontSize="Small"/>
                 <Label Text="{Binding MovesenseDeviceVM.Name}" FontSize="Small"/>
-            </StackLayout>
+				<Label Text="Battery Level: "
+                       VerticalOptions="Start" 
+                       FontSize="Small"/>
+				<Label Text="{Binding MovesenseDeviceVM.BatteryLevel}" FontSize="Small"/>
+			</StackLayout>
 
             <StackLayout Orientation="Vertical" HorizontalOptions="Start" Margin="10,10,0,0">
                 <Label Text="Subscribe" FontSize="Medium"/>
