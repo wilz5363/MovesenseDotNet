@@ -1,4 +1,7 @@
-﻿using MdsLibrary;
+﻿using Android.Util;
+using MdsLibrary;
+using MovesenseDemo.Model;
+using Newtonsoft.Json.Linq;
 using Plugin.BluetoothLE;
 using System;
 using System.Collections.Generic;
@@ -68,35 +71,50 @@ namespace MovesenseDemo
                     // Now do the Mds connection
                     var sensor = result.Device;
                     StatusLabel.Text = $"Connecting to device {sensor.Name}";
+					DeviceName.Text = $"{sensor.Name}";
                     var movesenseDevice = await movesense.ConnectMdsAsync(sensor.Uuid);
 
                     // Talk to the device
                     StatusLabel.Text = "Getting device info";
-                    var info = await movesenseDevice.GetDeviceInfoAsync();
+					var info = await movesenseDevice.GetDeviceInfoAsync();
+					DeviceFirmware.Text = $"Firmware Version: {info.DeviceInfo.Sw}";
 
-                    StatusLabel.Text = "Getting battery level";
+					StatusLabel.Text = "Getting battery level";
                     var batt = await movesenseDevice.GetBatteryLevelAsync();
+					DeviceBattery.Text = $"Battery Level: {batt.ChargePercent}";
 
-                    // Turn on the LED
-                    StatusLabel.Text = "Turning on LED";
-                    await movesenseDevice.SetLedStateAsync(0, true);
+					StatusLabel.Text = "Getting Heart Rate";
+					var hrData = await movesense.ApiSubscriptionAsync<string>(movesenseDevice: movesenseDevice, $"/Meas/HR",
+						(hr) =>
+						{
+							TestData(hr);
+						});
 
-                    await DisplayAlert(
-                        "Success", 
-                        $"Communicated with device {sensor.Name}, firmware version is: {info.DeviceInfo.Sw}, battery: {batt.ChargePercent}", 
-                        "OK");
+					// Turn on the LED
+					//StatusLabel.Text = "Turning on LED";
+					//await movesenseDevice.SetLedStateAsync(0, true);
 
-                    // Turn the LED off again
-                    StatusLabel.Text = "Turning off LED";
-                    await movesenseDevice.SetLedStateAsync(0, false);
+					//await DisplayAlert(
+					//    "Success", 
+					//    $"Communicated with device {sensor.Name}, firmware version is: {info.DeviceInfo.Sw}, battery: {batt.ChargePercent}", 
+					//    "OK");
 
-                    // Disconnect Mds
-                    StatusLabel.Text = "Disconnecting";
-                    await movesenseDevice.DisconnectMdsAsync();
-                    StatusLabel.Text = "Disconnected";
+					// Turn the LED off again
+					//StatusLabel.Text = "Turning off LED";
+					//await movesenseDevice.SetLedStateAsync(0, false);
 
-                }
+					// Disconnect Mds
+					//StatusLabel.Text = "Disconnecting";
+					//await movesenseDevice.DisconnectMdsAsync();
+					//StatusLabel.Text = "Disconnected";
+
+				}
             }
         }
-    }
+
+		private void TestData(string hr) {
+			JObject data = JObject.Parse(hr);
+			DeviceHR.Text = $"Current Heart Rate: {string.Format("{0:.##}", data["Body"]["average"])}";
+		}
+	}
 }

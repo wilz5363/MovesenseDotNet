@@ -7,6 +7,11 @@
         <StackLayout>
             <Button Text="Go" Margin="0,50,0,0" WidthRequest="200" Clicked="OnClicked"
                         HorizontalOptions="CenterAndExpand" />
-        <Label x:Name="StatusLabel" Margin="10,20,0,0"/>
-    </StackLayout>
+			<Label x:Name="StatusLabel" Margin="10,20,0,0"/>
+			<Label x:Name="DeviceName" Margin="10,20,0,0"/>
+			<Label x:Name="DeviceFirmware" Margin="10,20,0,0"/>
+			<Label x:Name="DeviceBattery" Margin="10,20,0,0"/>
+			<Label x:Name="DeviceHR" Margin="10,20,0,0"/>
+			
+	</StackLayout>
 </ContentPage>
